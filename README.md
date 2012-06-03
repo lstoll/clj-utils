@@ -6,6 +6,10 @@ A set of common utility functions I keep re-using
 
 This will retrieve a value from the current environment. If it's not there, it will fall back in to looking for the value in a .env file in the project root (in [foreman](https://github.com/ddollar/foreman/) key=value format). If the value doesn't exist there, it will fall back to either the default passed in, or nil
 
+## pmap2
+
+The standard pmap, but takes a value as the first argument that determines the concurrency level to map at. Useful for IO bound mapping, like processing a series of URLs concurrently.
+
 ## License
 
 Copyright (C) 2012 Lincoln Stoll

@@ -2,6 +2,9 @@
   (:use [lstoll.utils])
   (:use [clojure.test]))
 
+(defn thread-count []
+  (.getThreadCount (java.lang.management.ManagementFactory/getThreadMXBean)))
+
 ;; (env) tests. this set requires the .env file in this project
 
 (deftest env-no-default
@@ -16,3 +19,10 @@
 (deftest env-envvar-override
   "This also tests the override, as our mock .env includes a USER field"
   (is (System/getProperty "user.name") (env "USER")))
+
+;; (pmap2) tests
+
+(deftest pmap2-scale-out
+  (let [start-tc (thread-count)]
+    (pmap2 10 (fn [a] (Thread/sleep 4000)) (repeat 20 nil))
+    (is (> (+ 10 (thread-count)) start-tc))))
