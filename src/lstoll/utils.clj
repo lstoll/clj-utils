@@ -38,4 +38,4 @@
                    (let [ss (map seq cs)]
                      (when (every? identity ss)
                        (cons (map first ss) (step (map rest ss)))))))]
-       (pmap n #(apply f %) (step (cons coll colls))))))
+       (pmap2 n #(apply f %) (step (cons coll colls))))))

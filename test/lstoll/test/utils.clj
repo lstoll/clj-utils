@@ -26,3 +26,9 @@
   (let [start-tc (thread-count)]
     (pmap2 10 (fn [a] (Thread/sleep 4000)) (repeat 20 nil))
     (is (> (+ 10 (thread-count)) start-tc))))
+
+(deftest pmap2-scale-out-multicoll
+  (let [start-tc (thread-count)]
+    (pmap2 10 (fn [a b] (Thread/sleep 4000))
+           (repeat 20 nil)(repeat 20 nil))
+    (is (> (+ 10 (thread-count)) start-tc))))
