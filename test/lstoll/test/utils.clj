@@ -11,14 +11,14 @@
   (is (nil? (env "SOME_RANDOM_ENV"))))
 
 (deftest env-default
-  (is "defval" (env "SOME_RANDOM_ENV" "defval")))
+  (is (= "defval" (env "SOME_RANDOM_ENV" "defval"))))
 
 (deftest env-dotenv
-  (is "abc" (env "DOTENV_TEST_VAR" "def")))
+  (is (= "abc" (env "DOTENV_TEST_VAR" "def"))))
 
 (deftest env-envvar-override
   "This also tests the override, as our mock .env includes a USER field"
-  (is (System/getProperty "user.name") (env "USER")))
+  (is (= (System/getProperty "user.name") (env "USER"))))
 
 ;; (pmap2) tests
 
