@@ -32,3 +32,8 @@
     (pmap2 10 (fn [a b] (Thread/sleep 4000))
            (repeat 20 nil)(repeat 20 nil))
     (is (> (+ 10 (thread-count)) start-tc))))
+
+;; (log) tests
+
+(deftest log-complex-message
+  (is (= "message more a=b c=d final\n" (with-out-str (log "message" "more" {:a "b" :c "d"} "final")))))

@@ -10,6 +10,13 @@ This will retrieve a value from the current environment. If it's not there, it w
 
 The standard pmap, but takes a value as the first argument that determines the concurrency level to map at. Useful for IO bound mapping, like processing a series of URLs concurrently.
 
+## log
+
+Prints the passed in data to stdout. Can accept a variable length of string or map arguments, these are appended together with a space in between them. Maps are re-formatted in to k=v strings e.g:
+
+    lstoll.utils> (log "message" "more" {:a "b" :c "d"} "final")
+    message more a=b c=d final
+
 ## License
 
 Copyright (C) 2012 Lincoln Stoll

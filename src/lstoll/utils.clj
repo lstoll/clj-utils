@@ -39,3 +39,16 @@
                      (when (every? identity ss)
                        (cons (map first ss) (step (map rest ss)))))))]
        (pmap2 n #(apply f %) (step (cons coll colls))))))
+
+;; Log!
+(defn- format-log-message
+  [msg]
+  (if (instance? clojure.lang.IPersistentMap msg)
+    (apply str (interpose " " (doall (map (fn [[k v]] (str (name k) "=" v)) msg))))
+    msg))
+
+(defn log
+  "Prints the passed in data to stdout. Can accept a variable length of string or map arguments,
+  these are appended together with a space in between them. Maps are re-formatted in to k=v strings"
+  [& msgs]
+  (println (apply str (interpose " " (map format-log-message msgs)))))
