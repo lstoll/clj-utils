@@ -12,9 +12,10 @@
 
 (defn env [k & [v]]
   "This will retrieve a value from the current environment. If it's not there, it will fall back in to looking for the value in a .env file in the project root (in 'foreman' key=value format). If the value doesn't exist there, it will fall back to either the default passed in, or nil"
-  (or (System/getenv k)
-      (get (dotenv) k)
-      v))
+  (let [env (or (System/getenv k)
+                (get (dotenv) k)
+                v)]
+    (if env (str/replace env "\\n" "\n"))))
 
 ;; More parallel map - modifed from clojure.core/pmap
 (defn pmap2
