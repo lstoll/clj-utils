@@ -44,6 +44,20 @@
 ;; Log!
 (def log-agent (agent nil))
 
+(defmacro capture-and-send
+  "Capture the current value of the specified vars and rebind
+  them on the agent thread before executing the action.
+
+  Example:
+    (capture-and-send [*out*] a f b c)"
+  [vars agent action & args]
+  (let [locals (map #(gensym (name %)) vars)]
+    `(let [~@(interleave locals vars)
+           action# (fn [& args#]
+                     (binding [~@(interleave vars locals)]
+                       (apply ~action args#)))]
+       (send ~agent action# ~@args))))
+
 (defn- format-log-message
   [msg]
   (if (instance? clojure.lang.IPersistentMap msg)
@@ -54,5 +68,5 @@
   "Prints the passed in data to stdout. Can accept a variable length of string or map arguments,
   these are appended together with a space in between them. Maps are re-formatted in to k=v strings"
   [& msgs]
-  (send log-agent (fn [_] (prn (apply str (interpose " " (map format-log-message msgs))))))
+  (capture-and-send [*out*] log-agent (fn [_] (prn (apply str (interpose " " (map format-log-message msgs))))))
   nil)
