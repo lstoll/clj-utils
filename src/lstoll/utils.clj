@@ -42,6 +42,8 @@
        (pmap2 n #(apply f %) (step (cons coll colls))))))
 
 ;; Log!
+(def log-agent (agent nil))
+
 (defn- format-log-message
   [msg]
   (if (instance? clojure.lang.IPersistentMap msg)
@@ -52,4 +54,5 @@
   "Prints the passed in data to stdout. Can accept a variable length of string or map arguments,
   these are appended together with a space in between them. Maps are re-formatted in to k=v strings"
   [& msgs]
-  (println (apply str (interpose " " (map format-log-message msgs)))))
+  (send log-agent (fn [_] (prn (apply str (interpose " " (map format-log-message msgs))))))
+  nil)
