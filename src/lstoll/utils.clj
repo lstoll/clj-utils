@@ -58,15 +58,21 @@
                        (apply ~action args#)))]
        (send ~agent action# ~@args))))
 
+(defn- map-to-log-string
+  [m]
+  (apply str (interpose " " (doall (map (fn [[k v]] (str (name k) "=" v)) m)))))
+
 (defn- format-log-message
   [msg]
-  (if (instance? clojure.lang.IPersistentMap msg)
-    (apply str (interpose " " (doall (map (fn [[k v]] (str (name k) "=" v)) msg))))
+  (condp instance? msg
+    clojure.lang.IPersistentMap (map-to-log-string msg)
     msg))
 
 (defn log
   "Prints the passed in data to stdout. Can accept a variable length of string or map arguments,
   these are appended together with a space in between them. Maps are re-formatted in to k=v strings"
   [& msgs]
-  (capture-and-send [*out*] log-agent (fn [_] (prn (apply str (interpose " " (map format-log-message msgs))))))
+  (capture-and-send [*out*] log-agent (fn [_] (prn (if (instance? clojure.lang.Keyword (first msgs))
+                                                     (str (format-log-message (apply hash-map msgs)))
+                                                     (apply str (interpose " " (map format-log-message msgs)))))))
   nil)
