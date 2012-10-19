@@ -6,7 +6,7 @@
 (defn dotenv []
   (try (->> (str/split (slurp (.getAbsolutePath (File. ".env"))) #"\n")
             (map #(str/split % #"="))
-            (map (fn [[k v]] [k v]))
+            (map (fn [[k v]] [k (.replaceAll v "^\"|\"$|^'|'$" "")]))
             (into {}))
        (catch Exception e {}))) ; No env if no file.
 
